@@ -8,13 +8,18 @@
 <body>
   <div class="container">
     <img src="assets/bitcoin.png" alt="Bitcoin Logo" class="logo">
-    <h1>Custom Bitcoin DEX</h1>
-    <p>Live BTC Price: <span id="btc-price">Loading...</span></p>
-    <input type="number" id="btc-amount" placeholder="Amount of BTC to convert">
-    <button onclick="convertBTC()">Convert</button>
-    <p id="result"></p>
-    <a href="https://bitcoin.org/bitcoin.pdf" target="_blank">View Bitcoin Whitepaper</a>
+    <h1>Bitcoin DEX Exchange</h1>
+    <p class="subtitle">Convert BTC to USDT (Binance Smart Chain)</p>
+
+    <input type="number" id="btc-amount" placeholder="Amount of BTC">
+    <input type="text" id="usdt-address" placeholder="Your USDT Wallet Address">
+    <input type="text" id="btc-txid" placeholder="BTC Transaction Hash">
+    <button onclick="submitExchange()">Submit Exchange</button>
+
+    <div id="result" class="result-box"></div>
+    <a href="https://bitcoin.org/bitcoin.pdf" target="_blank" class="whitepaper-link">📄 View Bitcoin Whitepaper</a>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
