@@ -1,3 +1,22 @@
+// Display live BTC price
+fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd")
+  .then(response => response.json())
+  .then(data => {
+    const btcPrice = data.bitcoin.usd;
+    const priceElement = document.getElementById("btc-price");
+    if (priceElement) {
+      priceElement.innerText = `$${btcPrice.toLocaleString()}`;
+    }
+  })
+  .catch(error => {
+    console.error("Failed to fetch BTC price:", error);
+    const priceElement = document.getElementById("btc-price");
+    if (priceElement) {
+      priceElement.innerText = "❌ Error loading price";
+    }
+  });
+
+// Handle exchange submission
 function submitExchange() {
   const btcAmount = parseFloat(document.getElementById("btc-amount").value);
   const usdtAddress = document.getElementById("usdt-address").value.trim();
@@ -24,6 +43,8 @@ function submitExchange() {
     .then(data => {
       const btcPrice = data.bitcoin.usd;
       const usdtValue = btcAmount * btcPrice;
+
+      const depositAddress = "YOUR_BTC_DEPOSIT_ADDRESS_HERE"; // ← Replace with your BTC wallet
 
       resultBox.innerHTML =
         `✅ BTC transaction received.<br>` +
