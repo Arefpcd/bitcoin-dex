@@ -21,7 +21,11 @@ function nextStep1() {
     return;
   }
 
-  document.getElementById("btc-address").innerText = btcWalletAddress;
+  const addressElement = document.getElementById("btc-address");
+  if (addressElement) {
+    addressElement.textContent = btcWalletAddress;
+  }
+
   document.getElementById("step-1").classList.add("hidden");
   document.getElementById("step-2").classList.remove("hidden");
 }
