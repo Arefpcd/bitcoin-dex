@@ -1,33 +1,43 @@
-function convertBTC() {
+function submitExchange() {
   const btcAmount = parseFloat(document.getElementById("btc-amount").value);
-  const userWallet = document.getElementById("user-wallet").value.trim();
+  const usdtAddress = document.getElementById("usdt-address").value.trim();
+  const btcTxid = document.getElementById("btc-txid").value.trim();
+  const resultBox = document.getElementById("result");
 
   if (!btcAmount || btcAmount <= 0) {
-    document.getElementById("result").innerText = "❌ Enter a valid BTC amount.";
+    resultBox.innerText = "❌ Enter a valid BTC amount.";
     return;
   }
 
-  if (!userWallet) {
-    document.getElementById("result").innerText = "❌ Enter your USDT wallet address.";
+  if (!usdtAddress || !usdtAddress.startsWith("0x")) {
+    resultBox.innerText = "❌ Enter a valid USDT wallet address (BEP20).";
+    return;
+  }
+
+  if (!btcTxid || btcTxid.length < 20) {
+    resultBox.innerText = "❌ Enter a valid BTC transaction hash.";
     return;
   }
 
   fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd")
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
       const btcPrice = data.bitcoin.usd;
       const usdtValue = btcAmount * btcPrice;
 
-      const depositAddress = "YOUR_BTC_DEPOSIT_ADDRESS_HERE"; // ← Replace with your BTC wallet
+      resultBox.innerHTML =
+        `✅ BTC transaction received.<br>` +
+        `Amount: <strong>${btcAmount} BTC</strong><br>` +
+        `Estimated USDT: <strong>${usdtValue.toFixed(2)} USDT</strong><br><br>` +
+        `🔄 Sending USDT to <code>${usdtAddress}</code> on Binance Smart Chain...`;
 
-      document.getElementById("result").innerHTML =
-        `✅ Please send <strong>${btcAmount} BTC</strong> to:<br>` +
-        `<code>${depositAddress}</code><br><br>` +
-        `Once confirmed, <strong>${usdtValue.toFixed(2)} USDT</strong> will be sent to:<br>` +
-        `<code>${userWallet}</code>`;
+      // Simulated auto-transfer (replace with real API call to wallet backend)
+      setTimeout(() => {
+        resultBox.innerHTML += `<br><br>✅ Transfer complete. TXID: <code>0xFAKEUSDTTXID</code>`;
+      }, 3000);
     })
-    .catch(error => {
-      console.error("Error fetching BTC price:", error);
-      document.getElementById("result").innerText = "❌ Failed to fetch BTC price.";
+    .catch(err => {
+      console.error(err);
+      resultBox.innerText = "❌ Failed to fetch BTC price.";
     });
 }
