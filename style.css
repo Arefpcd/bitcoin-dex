@@ -14,7 +14,7 @@ body {
   padding: 30px;
   border-radius: 15px;
   text-align: center;
-  width: 350px;
+  width: 380px;
   box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }
 
@@ -68,4 +68,12 @@ button {
   margin-top: 20px;
   color: #ffcc00;
   text-decoration: none;
+}
+
+.step {
+  margin-top: 20px;
+}
+
+.hidden {
+  display: none;
 }
