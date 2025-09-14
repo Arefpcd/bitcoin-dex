@@ -1,64 +1,42 @@
-// Display live BTC price
+// Fetch live BTC price and display it
 fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd")
-  .then(response => response.json())
+  .then(res => res.json())
   .then(data => {
-    const btcPrice = data.bitcoin.usd;
-    const priceElement = document.getElementById("btc-price");
-    if (priceElement) {
-      priceElement.innerText = `$${btcPrice.toLocaleString()}`;
-    }
-  })
-  .catch(error => {
-    console.error("Failed to fetch BTC price:", error);
-    const priceElement = document.getElementById("btc-price");
-    if (priceElement) {
-      priceElement.innerText = "❌ Error loading price";
-    }
+    let btcPrice = data.bitcoin.usd;
+    document.getElementById("btc-price").innerText = `$${btcPrice}`;
   });
 
 // Handle exchange submission
-function submitExchange() {
-  const btcAmount = parseFloat(document.getElementById("btc-amount").value);
-  const usdtAddress = document.getElementById("usdt-address").value.trim();
-  const btcTxid = document.getElementById("btc-txid").value.trim();
-  const resultBox = document.getElementById("result");
+function convertBTC() {
+  let btcAmount = parseFloat(document.getElementById("btc-amount").value);
+  let userWallet = document.getElementById("user-wallet").value.trim();
 
   if (!btcAmount || btcAmount <= 0) {
-    resultBox.innerText = "❌ Enter a valid BTC amount.";
+    document.getElementById("result").innerText = "❌ Enter a valid BTC amount.";
     return;
   }
 
-  if (!usdtAddress || !usdtAddress.startsWith("0x")) {
-    resultBox.innerText = "❌ Enter a valid USDT wallet address (BEP20).";
-    return;
-  }
-
-  if (!btcTxid || btcTxid.length < 20) {
-    resultBox.innerText = "❌ Enter a valid BTC transaction hash.";
+  if (!userWallet) {
+    document.getElementById("result").innerText = "❌ Enter your USDT wallet address.";
     return;
   }
 
   fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd")
     .then(res => res.json())
     .then(data => {
-      const btcPrice = data.bitcoin.usd;
-      const usdtValue = btcAmount * btcPrice;
+      let btcPrice = data.bitcoin.usd;
+      let usdtValue = btcAmount * btcPrice;
 
-      const depositAddress = "YOUR_BTC_DEPOSIT_ADDRESS_HERE"; // ← Replace with your BTC wallet
+      let depositAddress = "YOUR_BTC_DEPOSIT_ADDRESS_HERE"; // Replace with your BTC wallet
 
-      resultBox.innerHTML =
-        `✅ BTC transaction received.<br>` +
-        `Amount: <strong>${btcAmount} BTC</strong><br>` +
-        `Estimated USDT: <strong>${usdtValue.toFixed(2)} USDT</strong><br><br>` +
-        `🔄 Sending USDT to <code>${usdtAddress}</code> on Binance Smart Chain...`;
-
-      // Simulated auto-transfer (replace with real API call to wallet backend)
-      setTimeout(() => {
-        resultBox.innerHTML += `<br><br>✅ Transfer complete. TXID: <code>0xFAKEUSDTTXID</code>`;
-      }, 3000);
+      document.getElementById("result").innerHTML =
+        `✅ Please send <strong>${btcAmount} BTC</strong> to:<br>` +
+        `<code>${depositAddress}</code><br><br>` +
+        `Once confirmed, <strong>${usdtValue.toFixed(2)} USDT</strong> will be sent to:<br>` +
+        `<code>${userWallet}</code>`;
     })
-    .catch(err => {
-      console.error(err);
-      resultBox.innerText = "❌ Failed to fetch BTC price.";
+    .catch(error => {
+      console.error("Error fetching BTC price:", error);
+      document.getElementById("result").innerText = "❌ Failed to fetch BTC price.";
     });
 }
