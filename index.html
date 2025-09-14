@@ -9,13 +9,29 @@
   <div class="container">
     <img src="assets/bitcoin.png" alt="Bitcoin Logo" class="logo">
     <h1>Bitcoin DEX Exchange</h1>
-    <p class="subtitle">Convert BTC to USDT (Binance Smart Chain)</p>
-   <p>Live BTC Price: <span id="btc-price">Loading...</span></p>
+    <p class="subtitle">Step-by-step BTC to USDT conversion</p>
+    <p>Live BTC Price: <span id="btc-price">Loading...</span></p>
 
-    <input type="number" id="btc-amount" placeholder="Amount of BTC">
-    <input type="text" id="usdt-address" placeholder="Your USDT Wallet Address">
-    <input type="text" id="btc-txid" placeholder="BTC Transaction Hash">
-    <button onclick="submitExchange()">Submit Exchange</button>
+    <div id="step-1" class="step">
+      <h2>Step 1: Enter BTC amount</h2>
+      <input type="number" id="btc-amount" placeholder="Amount of BTC">
+      <button onclick="nextStep1()">Next</button>
+    </div>
+
+    <div id="step-2" class="step hidden">
+      <h2>Step 2: Send BTC to this address</h2>
+      <p>Deposit Address:</p>
+      <code id="btc-address">YOUR_BTC_DEPOSIT_ADDRESS_HERE</code>
+      <p>After sending, enter your BTC transaction hash:</p>
+      <input type="text" id="btc-txid" placeholder="BTC Transaction Hash">
+      <button onclick="nextStep2()">Next</button>
+    </div>
+
+    <div id="step-3" class="step hidden">
+      <h2>Step 3: Enter your USDT wallet address</h2>
+      <input type="text" id="usdt-address" placeholder="Your USDT Wallet Address (BEP20)">
+      <button onclick="finalStep()">Convert</button>
+    </div>
 
     <div id="result" class="result-box"></div>
     <a href="https://bitcoin.org/bitcoin.pdf" target="_blank" class="whitepaper-link">📄 View Bitcoin Whitepaper</a>
