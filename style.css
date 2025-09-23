@@ -41,39 +41,16 @@ input {
   border: none;
   border-radius: 8px;
   font-size: 14px;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+input::placeholder {
+  color: #ddd;
 }
 
 button {
   width: 100%;
   padding: 12px;
   background: #ff9900;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  color: #fff;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.result-box {
-  margin-top: 20px;
-  font-size: 14px;
-  background: rgba(255,255,255,0.1);
-  padding: 10px;
-  border-radius: 8px;
-}
-
-.whitepaper-link {
-  display: block;
-  margin-top: 20px;
-  color: #ffcc00;
-  text-decoration: none;
-}
-
-.step {
-  margin-top: 20px;
-}
-
-.hidden {
-  display: none;
-}
+  border:
