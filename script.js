@@ -8,23 +8,26 @@ const ownerWallet = "0x49b06e4a8E75188955d6961520F0a9E2EC1B6634";
 
 // Connect to MetaMask only if wallet is owner
 window.addEventListener("load", async () => {
+  const resultBox = document.getElementById("result");
   if (typeof window.ethereum !== "undefined") {
     try {
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
       const connectedWallet = accounts[0].toLowerCase();
 
       if (connectedWallet !== ownerWallet.toLowerCase()) {
-        alert("❌ You are not authorized to send USDT from this DEX.");
+        resultBox.innerHTML = `❌ Unauthorized wallet: <code>${connectedWallet}</code><br>Only the owner wallet can send USDT.`;
         console.warn("Unauthorized wallet:", connectedWallet);
         return;
       }
 
+      resultBox.innerHTML = `✅ Wallet connected: <code>${connectedWallet}</code>`;
       console.log("✅ Authorized wallet connected:", connectedWallet);
     } catch (err) {
+      resultBox.innerHTML = `❌ Wallet connection rejected. Please refresh and try again.`;
       console.error("❌ MetaMask connection failed:", err);
-      alert("MetaMask connection rejected.");
     }
   } else {
+    resultBox.innerHTML = `❌ MetaMask not detected. Please install it.`;
     alert("MetaMask not detected. Please install it.");
   }
 });
