@@ -8,27 +8,24 @@ const ownerWallet = "0x49b06e4a8E75188955d6961520F0a9E2EC1B6634";
 
 // Connect to MetaMask only if wallet is owner
 window.addEventListener("load", async () => {
-  const resultBox = document.getElementById("result");
+  const walletStatus = document.getElementById("wallet-status");
   if (typeof window.ethereum !== "undefined") {
     try {
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
       const connectedWallet = accounts[0].toLowerCase();
 
-      if (connectedWallet !== ownerWallet.toLowerCase()) {
-        resultBox.innerHTML = `❌ Unauthorized wallet: <code>${connectedWallet}</code><br>Only the owner wallet can send USDT.`;
+      if (connectedWallet === ownerWallet.toLowerCase()) {
+        walletStatus.innerText = "✅";
+      } else {
+        walletStatus.innerText = "❌";
         console.warn("Unauthorized wallet:", connectedWallet);
-        return;
       }
-
-      resultBox.innerHTML = `✅ Wallet connected: <code>${connectedWallet}</code>`;
-      console.log("✅ Authorized wallet connected:", connectedWallet);
     } catch (err) {
-      resultBox.innerHTML = `❌ Wallet connection rejected. Please refresh and try again.`;
+      walletStatus.innerText = "❌";
       console.error("❌ MetaMask connection failed:", err);
     }
   } else {
-    resultBox.innerHTML = `❌ MetaMask not detected. Please install it.`;
-    alert("MetaMask not detected. Please install it.");
+    walletStatus.innerText = "❌";
   }
 });
 
@@ -146,6 +143,4 @@ document.getElementById("confirm-transfer").addEventListener("click", async () =
 function encodeTransfer(to, amount) {
   const methodId = "a9059cbb"; // transfer(address,uint256)
   const paddedTo = to.replace("0x", "").padStart(64, "0");
-  const paddedAmount = BigInt(amount).toString(16).padStart(64, "0");
-  return "0x" + methodId + paddedTo + paddedAmount;
-}
+  const paddedAmount = BigInt(amount).toString(16).padStart(64,
