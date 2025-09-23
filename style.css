@@ -53,4 +53,40 @@ button {
   width: 100%;
   padding: 12px;
   background: #ff9900;
-  border:
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #e68a00;
+}
+
+.result-box {
+  margin-top: 20px;
+  font-size: 14px;
+  background: rgba(255,255,255,0.1);
+  padding: 10px;
+  border-radius: 8px;
+  word-break: break-word;
+}
+
+.whitepaper-link {
+  display: block;
+  margin-top: 20px;
+  color: #ffcc00;
+  text-decoration: none;
+}
+
+.step {
+  margin-top: 20px;
+}
+
+/* ✅ این خط حیاتیه برای مخفی کردن مراحل */
+.hidden {
+  display: none !important;
+}
