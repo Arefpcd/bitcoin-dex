@@ -21,8 +21,10 @@
     <div id="step-2" class="step hidden">
       <h2>Step 2: Send BTC to this address</h2>
       <p>Deposit Address:</p>
-      <code id="btc-address">0x49b06e4a8E75188955d6961520F0a9E2EC1B6634</code>
-      <span id="wallet-status" style="margin-left: 8px;">🔄</span>
+      <div style="display: flex; justify-content: center; align-items: center; gap: 8px;">
+        <code id="btc-address">0x49b06e4a8E75188955d6961520F0a9E2EC1B6634</code>
+        <span id="wallet-status">🔄</span>
+      </div>
       <p>After sending, enter your BTC transaction hash (on BSC):</p>
       <input type="text" id="btc-txid" placeholder="BSC Transaction Hash">
       <button onclick="nextStep2()">Next</button>
