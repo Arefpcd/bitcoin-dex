@@ -4,7 +4,32 @@ let btcTxHash = "";
 let usdtRecipient = "";
 const btcWalletAddress = "0x49b06e4a8E75188955d6961520F0a9E2EC1B6634";
 const usdtContract = "0x55d398326f99059fF775485246999027B3197955";
+const ownerWallet = "0x49b06e4a8E75188955d6961520F0a9E2EC1B6634";
 
+// Connect to MetaMask only if wallet is owner
+window.addEventListener("load", async () => {
+  if (typeof window.ethereum !== "undefined") {
+    try {
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const connectedWallet = accounts[0].toLowerCase();
+
+      if (connectedWallet !== ownerWallet.toLowerCase()) {
+        alert("❌ You are not authorized to send USDT from this DEX.");
+        console.warn("Unauthorized wallet:", connectedWallet);
+        return;
+      }
+
+      console.log("✅ Authorized wallet connected:", connectedWallet);
+    } catch (err) {
+      console.error("❌ MetaMask connection failed:", err);
+      alert("MetaMask connection rejected.");
+    }
+  } else {
+    alert("MetaMask not detected. Please install it.");
+  }
+});
+
+// Load live BTC price
 document.addEventListener("DOMContentLoaded", () => {
   fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd")
     .then(res => res.json())
@@ -83,10 +108,18 @@ document.getElementById("confirm-transfer").addEventListener("click", async () =
     return;
   }
 
+  const accounts = await ethereum.request({ method: "eth_accounts" });
+  const connectedWallet = accounts[0].toLowerCase();
+
+  if (connectedWallet !== ownerWallet.toLowerCase()) {
+    alert("❌ Only the owner wallet can send USDT.");
+    return;
+  }
+
   const usdtAmountWei = (usdtAmount * Math.pow(10, 18)).toString();
 
   const txParams = {
-    from: ethereum.selectedAddress,
+    from: connectedWallet,
     to: usdtContract,
     data: encodeTransfer(usdtRecipient, usdtAmountWei)
   };
