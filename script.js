@@ -6,7 +6,6 @@ const btcWalletAddress = "0x49b06e4a8E75188955d6961520F0a9E2EC1B6634";
 const usdtContract = "0x55d398326f99059fF775485246999027B3197955";
 const ownerWallet = "0x49b06e4a8E75188955d6961520F0a9E2EC1B6634";
 
-// Connect to MetaMask only if wallet is owner
 window.addEventListener("load", async () => {
   const walletStatus = document.getElementById("wallet-status");
   if (typeof window.ethereum !== "undefined") {
@@ -14,22 +13,15 @@ window.addEventListener("load", async () => {
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
       const connectedWallet = accounts[0].toLowerCase();
 
-      if (connectedWallet === ownerWallet.toLowerCase()) {
-        walletStatus.innerText = "✅";
-      } else {
-        walletStatus.innerText = "❌";
-        console.warn("Unauthorized wallet:", connectedWallet);
-      }
+      walletStatus.innerText = connectedWallet === ownerWallet.toLowerCase() ? "✅" : "❌";
     } catch (err) {
       walletStatus.innerText = "❌";
-      console.error("❌ MetaMask connection failed:", err);
     }
   } else {
     walletStatus.innerText = "❌";
   }
 });
 
-// Load live BTC price
 document.addEventListener("DOMContentLoaded", () => {
   fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd")
     .then(res => res.json())
@@ -37,8 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const btcPrice = data.bitcoin.usd;
       document.getElementById("btc-price").innerText = `$${btcPrice.toLocaleString()}`;
     })
-    .catch(err => {
-      console.error("Error fetching BTC price:", err);
+    .catch(() => {
       document.getElementById("btc-price").innerText = "❌ Error loading price";
     });
 });
@@ -49,7 +40,6 @@ function nextStep1() {
     alert("Enter a valid BTC amount.");
     return;
   }
-
   document.getElementById("step-1").classList.add("hidden");
   document.getElementById("step-2").classList.remove("hidden");
 }
@@ -60,7 +50,6 @@ function nextStep2() {
     alert("Enter a valid BSC transaction hash.");
     return;
   }
-
   document.getElementById("step-2").classList.add("hidden");
   document.getElementById("step-3").classList.remove("hidden");
 }
@@ -81,65 +70,11 @@ function finalStep() {
       }
 
       const rawValue = parseInt(txData.result.value, 16);
-      const decimals = 18;
-      btcAmount = rawValue / Math.pow(10, decimals);
+      btcAmount = rawValue / Math.pow(10, 18);
 
       return fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
     })
     .then(res => res.json())
     .then(data => {
       const btcPrice = data.bitcoin.usd;
-      usdtAmount = btcAmount * btcPrice;
-
-      document.getElementById("step-3").classList.add("hidden");
-      document.getElementById("usdt-amount").innerText = usdtAmount.toFixed(2);
-      document.getElementById("step-4").classList.remove("hidden");
-    })
-    .catch(err => {
-      console.error("Error verifying transaction or fetching price:", err);
-      alert("Error verifying transaction or fetching price.");
-    });
-}
-
-document.getElementById("confirm-transfer").addEventListener("click", async () => {
-  if (typeof window.ethereum === "undefined") {
-    alert("MetaMask not detected.");
-    return;
-  }
-
-  const accounts = await ethereum.request({ method: "eth_accounts" });
-  const connectedWallet = accounts[0].toLowerCase();
-
-  if (connectedWallet !== ownerWallet.toLowerCase()) {
-    alert("❌ Only the owner wallet can send USDT.");
-    return;
-  }
-
-  const usdtAmountWei = (usdtAmount * Math.pow(10, 18)).toString();
-
-  const txParams = {
-    from: connectedWallet,
-    to: usdtContract,
-    data: encodeTransfer(usdtRecipient, usdtAmountWei)
-  };
-
-  try {
-    const txHash = await ethereum.request({
-      method: "eth_sendTransaction",
-      params: [txParams]
-    });
-
-    document.getElementById("result").innerHTML =
-      `✅ Transfer confirmed.<br>` +
-      `Sent <strong>${usdtAmount.toFixed(2)} USDT</strong> to <code>${usdtRecipient}</code><br>` +
-      `TXID: <code>${txHash}</code>`;
-  } catch (err) {
-    console.error("Transfer failed:", err);
-    alert("Transfer failed or rejected.");
-  }
-});
-
-function encodeTransfer(to, amount) {
-  const methodId = "a9059cbb"; // transfer(address,uint256)
-  const paddedTo = to.replace("0x", "").padStart(64, "0");
-  const paddedAmount = BigInt(amount).toString(16).padStart(64,
+      usdtAmount
