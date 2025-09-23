@@ -50,7 +50,6 @@ function nextStep1() {
     return;
   }
 
-  document.getElementById("btc-address").textContent = btcWalletAddress;
   document.getElementById("step-1").classList.add("hidden");
   document.getElementById("step-2").classList.remove("hidden");
 }
