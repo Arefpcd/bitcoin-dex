@@ -86,7 +86,14 @@ button:hover {
   margin-top: 20px;
 }
 
-/* ✅ این خط حیاتیه برای مخفی کردن مراحل */
 .hidden {
   display: none !important;
+}
+
+.wallet-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
 }
