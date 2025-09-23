@@ -12,9 +12,8 @@ window.addEventListener("load", async () => {
     try {
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
       const connectedWallet = accounts[0].toLowerCase();
-
       walletStatus.innerText = connectedWallet === ownerWallet.toLowerCase() ? "✅" : "❌";
-    } catch (err) {
+    } catch {
       walletStatus.innerText = "❌";
     }
   } else {
@@ -24,13 +23,17 @@ window.addEventListener("load", async () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd")
-    .then(res => res.json())
+    .then(res => {
+      if (!res.ok) throw new Error("API error");
+      return res.json();
+    })
     .then(data => {
-      const btcPrice = data.bitcoin.usd;
+      const btcPrice = data?.bitcoin?.usd;
+      if (!btcPrice) throw new Error("Price missing");
       document.getElementById("btc-price").innerText = `$${btcPrice.toLocaleString()}`;
     })
     .catch(() => {
-      document.getElementById("btc-price").innerText = "❌ Error loading price";
+      document.getElementById("btc-price").innerText = "❌ Price unavailable";
     });
 });
 
@@ -76,5 +79,4 @@ function finalStep() {
     })
     .then(res => res.json())
     .then(data => {
-      const btcPrice = data.bitcoin.usd;
-      usdtAmount
+      const
