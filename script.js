@@ -23,13 +23,9 @@ window.addEventListener("load", async () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd")
-    .then(res => {
-      if (!res.ok) throw new Error("API error");
-      return res.json();
-    })
+    .then(res => res.json())
     .then(data => {
-      const btcPrice = data?.bitcoin?.usd;
-      if (!btcPrice) throw new Error("Price missing");
+      const btcPrice = data.bitcoin.usd;
       document.getElementById("btc-price").innerText = `$${btcPrice.toLocaleString()}`;
     })
     .catch(() => {
@@ -79,4 +75,5 @@ function finalStep() {
     })
     .then(res => res.json())
     .then(data => {
-      const
+      const btcPrice = data.bitcoin.usd;
+      usdtAmount = btcAmount *
