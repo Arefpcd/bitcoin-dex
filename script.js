@@ -10,8 +10,8 @@ window.addEventListener("load", async () => {
   const walletStatus = document.getElementById("wallet-status");
   if (typeof window.ethereum !== "undefined") {
     try {
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-      const connectedWallet = accounts[0].toLowerCase();
+      const accounts = await window.ethereum.request({ method: "eth_accounts" });
+      const connectedWallet = accounts[0]?.toLowerCase();
       walletStatus.innerText = connectedWallet === ownerWallet.toLowerCase() ? "✅" : "❌";
     } catch {
       walletStatus.innerText = "❌";
@@ -25,13 +25,32 @@ document.addEventListener("DOMContentLoaded", () => {
   fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd")
     .then(res => res.json())
     .then(data => {
-      const btcPrice = data.bitcoin.usd;
-      document.getElementById("btc-price").innerText = `$${btcPrice.toLocaleString()}`;
+      const btcPrice = data?.bitcoin?.usd;
+      document.getElementById("btc-price").innerText = btcPrice
+        ? `$${btcPrice.toLocaleString()}`
+        : "❌ Price unavailable";
     })
     .catch(() => {
       document.getElementById("btc-price").innerText = "❌ Price unavailable";
     });
 });
+
+function manualConnect() {
+  if (typeof window.ethereum !== "undefined") {
+    window.ethereum.request({ method: "eth_requestAccounts" })
+      .then(accounts => {
+        const connectedWallet = accounts[0].toLowerCase();
+        const walletStatus = document.getElementById("wallet-status");
+        walletStatus.innerText = connectedWallet === ownerWallet.toLowerCase() ? "✅" : "❌";
+        alert("🔗 Wallet manually connected.");
+      })
+      .catch(() => {
+        alert("❌ Manual connection failed.");
+      });
+  } else {
+    alert("❌ MetaMask not detected.");
+  }
+}
 
 function nextStep1() {
   btcAmount = parseFloat(document.getElementById("btc-amount").value);
@@ -56,24 +75,4 @@ function nextStep2() {
 function finalStep() {
   usdtRecipient = document.getElementById("usdt-address").value.trim();
   if (!usdtRecipient || !usdtRecipient.startsWith("0x")) {
-    alert("Enter a valid BEP20 USDT wallet address.");
-    return;
-  }
-
-  fetch(`https://api.bscscan.com/api?module=proxy&action=eth_getTransactionByHash&txhash=${btcTxHash}&apikey=YourApiKey`)
-    .then(res => res.json())
-    .then(txData => {
-      if (!txData.result || txData.result.to.toLowerCase() !== btcWalletAddress.toLowerCase()) {
-        alert("Transaction not found or not sent to your BTC wallet address.");
-        return;
-      }
-
-      const rawValue = parseInt(txData.result.value, 16);
-      btcAmount = rawValue / Math.pow(10, 18);
-
-      return fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
-    })
-    .then(res => res.json())
-    .then(data => {
-      const btcPrice = data.bitcoin.usd;
-      usdtAmount = btcAmount *
+    alert("Enter
