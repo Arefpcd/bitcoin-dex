@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  background: #121212;
   color: #fff;
   display: flex;
   justify-content: center;
@@ -10,28 +10,16 @@ body {
 }
 
 .container {
-  background: rgba(255, 255, 255, 0.05);
+  background: #1e1e1e;
   padding: 30px;
   border-radius: 15px;
   text-align: center;
-  width: 380px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
-}
-
-.logo {
-  width: 80px;
-  margin-bottom: 15px;
+  width: 400px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 
 h1 {
-  margin-bottom: 5px;
-  font-size: 24px;
-}
-
-.subtitle {
-  font-size: 14px;
   margin-bottom: 10px;
-  color: #ccc;
 }
 
 input {
@@ -41,12 +29,12 @@ input {
   border: none;
   border-radius: 8px;
   font-size: 14px;
-  background: rgba(255,255,255,0.2);
+  background: #2c2c2c;
   color: #fff;
 }
 
 input::placeholder {
-  color: #ddd;
+  color: #aaa;
 }
 
 button {
@@ -59,42 +47,21 @@ button {
   color: #fff;
   cursor: pointer;
   margin-top: 10px;
-  transition: background 0.3s ease;
 }
 
 button:hover {
   background: #e68a00;
 }
 
+.hidden {
+  display: none;
+}
+
 .result-box {
   margin-top: 20px;
   font-size: 14px;
-  background: rgba(255,255,255,0.1);
+  background: #2c2c2c;
   padding: 10px;
   border-radius: 8px;
   word-break: break-word;
 }
-
-.whitepaper-link {
-  display: block;
-  margin-top: 20px;
-  color: #ffcc00;
-  text-decoration: none;
-}
-
-.step {
-  margin-top: 20px;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.wallet-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  margin-top: 5px;
-}
-
