@@ -105,4 +105,22 @@ async function sendUSDT() {
     return;
   }
 
-  const usdtContractAddress
+  const usdtContractAddress = "0x55d398326f99059fF775485246999027B3197955";
+  const usdtAbi = [
+    {
+      "constant": false,
+      "inputs": [
+        { "name": "_to", "type": "address" },
+        { "name": "_value", "type": "uint256" }
+      ],
+      "name": "transfer",
+      "outputs": [{ "name": "", "type": "bool" }],
+      "type": "function"
+    }
+  ];
+
+  const web3 = new Web3(window.ethereum);
+  const contract = new web3.eth.Contract(usdtAbi, usdtContractAddress);
+
+  const decimals = 18;
+  const amountInWei =
