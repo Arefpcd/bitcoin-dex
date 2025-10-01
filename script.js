@@ -3,7 +3,6 @@ let usdtAmount = 0;
 let btcTxHash = "";
 let usdtRecipient = "";
 const btcWalletAddress = "0x49b06e4a8E75188955d6961520F0a9E2EC1B6634";
-const usdtContract = "0x55d398326f99059fF775485246999027B3197955";
 const ownerWallet = "0x49b06e4a8E75188955d6961520F0a9E2EC1B6634";
 
 window.addEventListener("load", async () => {
@@ -22,13 +21,16 @@ window.addEventListener("load", async () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd")
-    .then(res => res.json())
+  fetch("https://api.coincap.io/v2/assets/bitcoin")
+    .then(response => response.json())
     .then(data => {
-      const btcPrice = data?.bitcoin?.usd;
-      document.getElementById("btc-price").innerText = btcPrice
-        ? `$${btcPrice.toLocaleString()}`
-        : "❌ Price unavailable";
+      const btcPrice = data?.data?.priceUsd;
+      const priceElement = document.getElementById("btc-price");
+      if (btcPrice) {
+        priceElement.innerText = `$${parseFloat(btcPrice).toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+      } else {
+        priceElement.innerText = "❌ Price unavailable";
+      }
     })
     .catch(() => {
       document.getElementById("btc-price").innerText = "❌ Price unavailable";
@@ -42,13 +44,13 @@ function manualConnect() {
         const connectedWallet = accounts[0].toLowerCase();
         const walletStatus = document.getElementById("wallet-status");
         walletStatus.innerText = connectedWallet === ownerWallet.toLowerCase() ? "✅" : "❌";
-        alert("🔗 Wallet manually connected.");
+        alert("Wallet manually connected.");
       })
       .catch(() => {
-        alert("❌ Manual connection failed.");
+        alert("Manual connection failed.");
       });
   } else {
-    alert("❌ MetaMask not detected.");
+    alert("MetaMask not detected.");
   }
 }
 
@@ -73,6 +75,4 @@ function nextStep2() {
 }
 
 function finalStep() {
-  usdtRecipient = document.getElementById("usdt-address").value.trim();
-  if (!usdtRecipient || !usdtRecipient.startsWith("0x")) {
-    alert("Enter
+  usdtRecipient = document.getElementById("usdt
