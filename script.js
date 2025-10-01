@@ -119,4 +119,8 @@ async function sendUSDT() {
     }
   ];
 
-  const web3 =
+  const web3 = new Web3(window.ethereum);
+  const contract = new web3.eth.Contract(usdtAbi, usdtContractAddress);
+
+  const decimals = 18;
+  const amountInWei =
