@@ -105,10 +105,4 @@ async function sendUSDT() {
     return;
   }
 
-  const usdtContractAddress = "0x55d398326f99059fF775485246999027B3197955";
-  const usdtAbi = [
-    {
-      "constant": false,
-      "inputs": [
-        { "name": "_to", "type": "address" },
-        { "name": "_
+  const usdtContractAddress
