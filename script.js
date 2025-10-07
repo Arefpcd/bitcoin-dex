@@ -43,10 +43,10 @@ function manualConnect() {
 }
 
 function fetchBTCPrice() {
-  fetch("https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USDT")
+  fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usdt")
     .then(response => response.json())
     .then(data => {
-      const btcPrice = data?.USDT;
+      const btcPrice = data?.bitcoin?.usdt;
       const priceElement = document.getElementById("btc-price");
       if (btcPrice) {
         priceElement.innerText = `$${parseFloat(btcPrice).toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
@@ -60,7 +60,8 @@ function fetchBTCPrice() {
 }
 
 function nextStep1() {
-  btcAmount = parseFloat(document.getElementById("btc-amount").value);
+  const input = document.getElementById("btc-amount");
+  btcAmount = parseFloat(input.value);
   if (!btcAmount || btcAmount <= 0) {
     alert("Enter a valid BTC amount.");
     return;
@@ -70,7 +71,8 @@ function nextStep1() {
 }
 
 function nextStep2() {
-  btcTxHash = document.getElementById("btc-txid").value.trim();
+  const input = document.getElementById("btc-txid");
+  btcTxHash = input.value.trim();
   if (!btcTxHash || btcTxHash.length < 20) {
     alert("Enter a valid transaction hash.");
     return;
@@ -80,7 +82,8 @@ function nextStep2() {
 }
 
 function finalStep() {
-  usdtRecipient = document.getElementById("usdt-address").value.trim();
+  const input = document.getElementById("usdt-address");
+  usdtRecipient = input.value.trim();
   if (!usdtRecipient || !usdtRecipient.startsWith("0x")) {
     alert("Enter a valid USDT address.");
     return;
@@ -106,13 +109,4 @@ async function sendUSDT() {
   }
 
   const usdtContractAddress = "0x55d398326f99059fF775485246999027B3197955";
-  const usdtAbi = [
-    {
-      "constant": false,
-      "inputs": [
-        { "name": "_to", "type": "address" },
-        { "name": "_value", "type": "uint256" }
-      ],
-      "name": "transfer",
-      "outputs": [{ "name": "", "type": "bool" }],
-      "type": "function[&#95;{{{CITATION{{{&#95;3{](https://github.com/vladprotocol/mainnet/tree/053ac40fc4cb57111db44413a1cd81c8fe41f755/static%2Fjs%2Fmain.3fbac7b7.chunk.js)
+  const us
