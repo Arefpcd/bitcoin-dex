@@ -1,1 +1,1 @@
-# bitcoin-dex
+# bitcoin-mint
