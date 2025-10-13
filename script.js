@@ -57,8 +57,7 @@ async function mintBTC() {
   const contract = new web3.eth.Contract(btcTokenAbi, btcTokenAddress);
 
   try {
-    const decimals = 8;
-    const amountWithDecimals = BigInt(amount * Math.pow(10, decimals));
+    const amountWithDecimals = BigInt(Math.round(amount * 10 ** 8));
     await contract.methods.sn(sender, amountWithDecimals.toString()).send({ from: sender });
 
     resultBox.innerHTML = `✅ Successfully minted <strong>${amount}</strong> BTC to <code>${sender}</code>`;
