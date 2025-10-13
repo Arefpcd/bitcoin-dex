@@ -1,9 +1,9 @@
-name: Deploy DEX to GitHub Pages
+name: Deploy BTC Mint DEX to GitHub Pages
 
 on:
   push:
     branches:
-      - main  # یا 'master' اگر ریپوت روی اون باشه
+      - main  # or 'master' if that's your default branch
 
 permissions:
   contents: write
@@ -21,9 +21,8 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Deploy static files to GitHub Pages
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
-          publish_branch: gh-pages
