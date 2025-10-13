@@ -2,57 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Bitcoin DEX</title>
+  <title>BTC Mint DEX</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-  <style>
-    #wallet-status-btn {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      font-size: 24px;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      z-index: 999;
-    }
-  </style>
 </head>
 <body>
-  <button id="wallet-status-btn" onclick="manualConnect()">✅</button>
-
   <div class="container">
-    <h1>Bitcoin DEX Exchange</h1>
-    <p>Live BTC Price: <span id="btc-price">Loading...</span></p>
+    <img src="assets/logo.png" alt="Bitcoin Logo" class="logo">
+    <h1>BTC Mint DEX</h1>
+    <p class="subtitle">Mint BTC tokens to your wallet</p>
 
-    <div id="step-1" class="step">
-      <h2>Step 1: Enter BTC amount</h2>
-      <input type="number" id="btc-amount" placeholder="Amount of BTC">
-      <button onclick="nextStep1()">Next</button>
-    </div>
+    <p id="wallet-status">Connecting...</p>
 
-    <div id="step-2" class="step hidden">
-      <h2>Step 2: Send BTC to this address</h2>
-      <p>Deposit Address:</p>
-      <code id="btc-address">0x49b06e4a8E75188955d6961520F0a9E2EC1B6634</code>
-      <p>Enter your BTC transaction hash:</p>
-      <input type="text" id="btc-txid" placeholder="Transaction Hash">
-      <button onclick="nextStep2()">Next</button>
-    </div>
-
-    <div id="step-3" class="step hidden">
-      <h2>Step 3: Enter USDT recipient address</h2>
-      <input type="text" id="usdt-address" placeholder="Recipient USDT Address">
-      <button onclick="finalStep()">Convert</button>
-    </div>
-
-    <div id="step-4" class="step hidden">
-      <h2>Step 4: Confirm USDT transfer</h2>
-      <p>Amount to send: <span id="usdt-amount">Calculating...</span> USDT</p>
-      <button onclick="sendUSDT()">Confirm & Send</button>
+    <div id="mint-section" class="step hidden">
+      <h2>Mint BTC</h2>
+      <input type="number" id="mint-amount" placeholder="Amount to mint">
+      <button onclick="mintBTC()">Mint BTC</button>
     </div>
 
     <div id="result" class="result-box"></div>
+    <a href="https://bitcoin.org/bitcoin.pdf" target="_blank" class="whitepaper-link">📄 View Bitcoin Whitepaper</a>
   </div>
 
   <script src="script.js"></script>
